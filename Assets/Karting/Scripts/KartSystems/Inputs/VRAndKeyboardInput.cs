@@ -6,16 +6,25 @@ namespace KartGame.KartSystems {
 
     public class KeyboardInput : BaseInput
     {
+        public bool hasVrSteering;
         public HingeJoint wheel;
         public string TurnInputName = "Horizontal";
         public string AccelerateButtonName = "Accelerate";
         public string BrakeButtonName = "Brake";
 
         public override InputData GenerateInput() {
+            float steeringNormal, steeringRange;
 
             // Wheel Rotation to Turn Output Logic
-            float steeringNormal = Mathf.InverseLerp(-0.35f, 0.35f, wheel.transform.localRotation.x);
-            float steeringRange = -1 * Mathf.Lerp(-1, 1, steeringNormal);
+            if (hasVrSteering)
+            {
+                steeringNormal = Mathf.InverseLerp(-0.35f, 0.35f, wheel.transform.localRotation.x);
+                steeringRange =  -1 * Mathf.Lerp(-1, 1, steeringNormal);
+            }
+            else
+            {
+                steeringRange = 0;
+            }
             return new InputData
             {
                 Accelerate = Input.GetButton(AccelerateButtonName),
