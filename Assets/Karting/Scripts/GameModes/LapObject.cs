@@ -12,10 +12,11 @@ public class LapObject : TargetObject
     [HideInInspector]
     public bool lapOverNextPass;
 
-    void Start() {
+    void Start()
+    {
         Register();
     }
-    
+
     void OnEnable()
     {
         lapOverNextPass = false;
@@ -25,7 +26,7 @@ public class LapObject : TargetObject
     {
         if (!((layerMask.value & 1 << other.gameObject.layer) > 0 && other.CompareTag("Player")))
             return;
-       
+
         Objective.OnUnregisterPickup?.Invoke(this);
     }
 }

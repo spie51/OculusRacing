@@ -48,9 +48,11 @@ public class VRGameFlowManager : MonoBehaviour
     // public TextMeshProUGUI timerText;
     VRTimeManager m_TimeManager;
     VRCountdownManager m_CountdownManager;
+    public FinishLineObject finishLineObject;
     // float m_TimeLoadEndGameScene;
     // string m_SceneToLoad;
     // float elapsedTimeBeforeEndScene = 0;
+    bool gameConcluded = false;
 
     void Start()
     {
@@ -65,7 +67,9 @@ public class VRGameFlowManager : MonoBehaviour
         }
 
         // m_ObjectiveManager = FindObjectOfType<ObjectiveManager>();
-		// DebugUtility.HandleErrorIfNullFindObject<ObjectiveManager, GameFlowManager>(m_ObjectiveManager, this);
+        // DebugUtility.HandleErrorIfNullFindObject<ObjectiveManager, GameFlowManager>(m_ObjectiveManager, this);
+        finishLineObject = FindObjectOfType<FinishLineObject>();
+        DebugUtility.HandleErrorIfNullFindObject<FinishLineObject, VRGameFlowManager>(finishLineObject, this);
 
         m_TimeManager = FindObjectOfType<VRTimeManager>();
         DebugUtility.HandleErrorIfNullFindObject<VRTimeManager, VRGameFlowManager>(m_TimeManager, this);
@@ -81,7 +85,7 @@ public class VRGameFlowManager : MonoBehaviour
         m_TimeManager.StopRace();
         foreach (ArcadeKart k in karts)
         {
-			k.SetCanMove(false);
+            k.SetCanMove(false);
         }
 
         //run race countdown animation
@@ -91,20 +95,22 @@ public class VRGameFlowManager : MonoBehaviour
         StartCoroutine(CountdownThenStartRaceRoutine());
     }
 
-    IEnumerator CountdownThenStartRaceRoutine() {
+    IEnumerator CountdownThenStartRaceRoutine()
+    {
         yield return new WaitForSeconds(3f);
         StartRace();
     }
 
-    void StartRace() {
+    void StartRace()
+    {
         foreach (ArcadeKart k in karts)
         {
-			k.SetCanMove(true);
+            k.SetCanMove(true);
         }
         m_TimeManager.StartRace();
     }
-
-    void StartCountdown() {
+    void StartCountdown()
+    {
         // raceCountdownTrigger.Play();
         m_CountdownManager.StartCountdown(3.0f);
     }
@@ -120,10 +126,43 @@ public class VRGameFlowManager : MonoBehaviour
     //     }
     // }
 
+    void EndGame(bool winner)
+    {
+        Debug.Log(winner ? "You won!" : "You lost!");
+        SceneManager.LoadScene("EndScene");
+        // AudioUtility.SetMasterVolume(0.5f);
+        // StartCoroutine(LoadScene(winner));
+    }
+
+    IEnumerator LoadScene(bool winner)
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("EndScene");
+    }
+
 
     void Update()
     {
 
+        if (!gameConcluded)
+        {
+            int gameModifier = -1;
+            if (finishLineObject.playerFinished && !finishLineObject.AIFinished)
+            {
+                gameConcluded = true;
+                gameModifier = 1;
+            }
+            else if (!finishLineObject.playerFinished && finishLineObject.AIFinished)
+            {
+                gameConcluded = true;
+                gameModifier = 0;
+            }
+            if (gameModifier != -1)
+            {
+                bool winner = gameModifier == 1 ? true : false;
+                EndGame(winner);
+            }
+        }
         // if (gameState != GameState.Play)
         // {
         //     elapsedTimeBeforeEndScene += Time.deltaTime;

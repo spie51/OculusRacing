@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 
 public class VRTimeManager : MonoBehaviour
-{ 
+{
     public bool IsFinite { get; private set; }
     public float TotalTime { get; private set; }
     public float TimeRemaining { get; private set; }
@@ -54,7 +54,7 @@ public class VRTimeManager : MonoBehaviour
         // Debug.Log("Outside" + TimeElapsed);
 
         if (!raceStarted) return;
-        
+
         if (!IsOver)
         {
             // TimeRemaining -= Time.deltaTime;
@@ -67,13 +67,13 @@ public class VRTimeManager : MonoBehaviour
             TimeElapsed += Time.deltaTime;
 
             timerText.gameObject.SetActive(true);
-            int timeRemaining = (int) Math.Ceiling(TimeElapsed);
-            int deciRemaining = (int) Math.Ceiling(TimeElapsed * 10) % 10;
+            int timeRemaining = (int)Math.Floor(TimeElapsed);
+            int deciRemaining = (int)Math.Floor(TimeElapsed * 10) % 10;
             string minuteText = timeRemaining / 60 > 9 ? "" + timeRemaining / 60 : "0" + timeRemaining / 60;
             string secondText = timeRemaining % 60 > 9 ? "" + timeRemaining % 60 : "0" + timeRemaining % 60;
             timerText.text = minuteText + ":" + secondText + ":" + deciRemaining;
 
-        // Debug.Log(minuteText + ":" + secondText + ":" + deciRemaining);
+            // Debug.Log(minuteText + ":" + secondText + ":" + deciRemaining);
 
             // Debug.Log("Inside" + TimeElapsed);
         }
@@ -85,7 +85,8 @@ public class VRTimeManager : MonoBehaviour
         TimeElapsed = 0.0f;
     }
 
-    public void StopRace() {
+    public void StopRace()
+    {
         raceStarted = false;
     }
 }

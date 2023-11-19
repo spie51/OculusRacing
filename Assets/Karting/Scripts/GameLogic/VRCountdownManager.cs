@@ -17,7 +17,7 @@ public class VRCountdownManager : MonoBehaviour
         // Debug.Log("Outside" + TimeElapsed);
 
         if (!countdownStarted) return;
-        
+
         if (!IsOver)
         {
             TimeRemaining -= Time.deltaTime;
@@ -26,8 +26,8 @@ public class VRCountdownManager : MonoBehaviour
                 TimeRemaining = 0;
                 IsOver = true;
             }
-            Debug.Log(TimeRemaining);
-            timerText.text = "" + (int) Math.Ceiling(TimeRemaining);
+            // Debug.Log(TimeRemaining);
+            timerText.text = "" + (int)Math.Ceiling(TimeRemaining);
 
             // TimeElapsed += Time.deltaTime;
             // Debug.Log("Inside" + TimeElapsed);
@@ -40,7 +40,8 @@ public class VRCountdownManager : MonoBehaviour
         TimeRemaining = countdownTime;
     }
 
-    public void StopCountdown() {
+    public void StopCountdown()
+    {
         countdownStarted = false;
     }
 }
