@@ -18,8 +18,17 @@ namespace KartGame.KartSystems {
             // Wheel Rotation to Turn Output Logic
             if (hasVrSteering)
             {
-                steeringNormal = Mathf.InverseLerp(-0.35f, 0.35f, wheel.transform.localRotation.x);
-                steeringRange =  -1 * Mathf.Lerp(-1, 1, steeringNormal);
+                float rawWheelAngle = wheel.transform.localRotation.eulerAngles.x;
+                float wheelAngle = rawWheelAngle >= 180.0 ? rawWheelAngle - 360 : rawWheelAngle ;
+                steeringRange = Mathf.Clamp(-1 * wheelAngle / 90.0f, -1, 1);
+                // Debug.Log(rawWheelAngle + " " + wheelAngle + " " + steeringRange);
+                
+                // steeringNormal = Mathf.InverseLerp(-0.35f, 0.35f, wheel.transform.localRotation.x);
+                // steeringRange =  -1 * Mathf.Lerp(-1, 1, steeringNormal);
+                // Debug.Log("ALL 3 " + wheel.transform.localRotation);
+                // Debug.Log(wheel.transform.localRotation.eulerAngles.x + " " + steeringNormal + " " + steeringRange);
+                // steeringNormal = Mathf.InverseLerp(-0.35f, 0.35f, wheel.transform.localRotation.x);
+                // steeringRange =  -1 * Mathf.Lerp(-1, 1, steeringNormal);
             }
             else
             {
